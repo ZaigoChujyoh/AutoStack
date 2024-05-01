@@ -9,6 +9,8 @@ if(!File.exists(savedir)){
 	File.makeDirectory(savedir)
 };
 
+col = newArray("Green", "Magenta", "Cyan"); //お好きな色でどうぞ
+
 //main
 for(j=0; j<list.length; j++){
 	name = list[j];
@@ -19,18 +21,15 @@ for(j=0; j<list.length; j++){
 	run("Z Project...", "projection=[Max Intensity]"); //Stack
 	close(name);
 	
-	//Channel1
-	Stack.setChannel(1);
-	run("Green");
-	run("Enhance Contrast", "saturated=0.35");
+	Stack.getDimensions(width, height, channels, slices, frames);
 	
-	//Channel2
-	Stack.setChannel(2);
-	run("Magenta");
-	run("Enhance Contrast", "saturated=0.35");
+	for(k=0; k<channels; k++){
+		Stack.setChannel(k+1);
+		run(col[k]);
+		run("Enhance Contrast", "saturated=0.35");
+	}
 	
 	//Merge channels
-	run("Channels Tool...");
 	Property.set("CompositeProjection", "Sum");
 	Stack.setDisplayMode("composite");
 	
@@ -38,4 +37,8 @@ for(j=0; j<list.length; j++){
 	saveAs("png", savedir + sub + "_stack.png");
 	close("MAX_"+name);
 	close();
+	
+	//表示モードを元に戻す
+	Property.set("CompositeProjection", "null");
+	Stack.setDisplayMode("color");
 }
