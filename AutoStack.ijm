@@ -14,15 +14,18 @@ col = newArray("Green", "Magenta", "Cyan"); //お好きな色でどうぞ
 //main
 for(j=0; j<list.length; j++){
 	name = list[j];
-	open(dir+name);
+	//open(dir+name);
+	path = dir+name;
+	run("Bio-Formats Importer", "open=path");
 	extention = indexOf(name, ".");
-	sub = substring(name, 0, extention); //元データは"sub.extension"
+	namewithoutextension = substring(name, 0, extention); //元データは"namewithoutextension.extension"
 	
 	run("Z Project...", "projection=[Max Intensity]"); //Stack
-	close(name);
+	close(name); //元ファイルを閉じる
 	
-	Stack.getDimensions(width, height, channels, slices, frames);
+	Stack.getDimensions(width, height, channels, slices, frames); //チャンネル数を取得
 	
+	//各チャンネルの色を変更・コントラストの調整
 	for(k=0; k<channels; k++){
 		Stack.setChannel(k+1);
 		run(col[k]);
@@ -34,7 +37,7 @@ for(j=0; j<list.length; j++){
 	Stack.setDisplayMode("composite");
 	
 	//Save
-	saveAs("png", savedir + sub + "_stack.png");
+	saveAs("png", savedir + namewithoutextension + "_stack.png");
 	close("MAX_"+name);
 	close();
 	
