@@ -81,11 +81,15 @@ for(j=0; j<list.length; j++){
 		//Save
 		saveAs("png", savedir + namewithoutextension + "_stack.png");
 	}
-	
-	close("MAX_"+name);
-	close();
-	
+
 	//表示モードを元に戻す
 	Property.set("CompositeProjection", "null");
 	Stack.setDisplayMode("color");
+		
+	close("MAX_"+name);
+	close();
 }
+
+Dialog.create("Finished");
+Dialog.addMessage("All files have been successfully stacked!");
+Dialog.show;
