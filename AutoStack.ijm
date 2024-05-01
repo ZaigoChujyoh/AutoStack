@@ -32,16 +32,19 @@ if(stackmode != "All channels"){
 	channel1 = Dialog.getString();
 	channel2 = Dialog.getString();
 	channel3 = Dialog.getString();
+	
+	//single channelモードで使う色の設定
+	if(colormode == "Gray"){
+	col_singlechannel = newArray("Grays", "Grays", "Grays");
+	}else{
+	col_singlechannel = col;
+	}
+	
+	//single channelモードで保存するときのチャネルの名前
+	channelname = newArray(channel1, channel2, channel3);
 }
 
 col = newArray("Green", "Magenta", "Cyan"); //お好きな色でどうぞ
-if(colormode == "Gray"){
-	col_singlechannel = newArray("Grays", "Grays", "Grays");
-}else{
-	col_singlechannel = col;
-}
-channelname = newArray(channel1, channel2, channel3);
-
 
 //main
 for(j=0; j<list.length; j++){
