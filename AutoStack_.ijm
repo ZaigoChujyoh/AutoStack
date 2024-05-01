@@ -37,7 +37,7 @@ if(stackmode != "All channels"){
 	if(colormode == "Gray"){
 	col_singlechannel = newArray("Grays", "Grays", "Grays");
 	}else{
-	col_singlechannel = col;
+	col_singlechannel = newArray("Green", "Magenta", "Cyan"); //お好きな色でどうぞ
 	}
 	
 	//single channelモードで保存するときのチャネルの名前
