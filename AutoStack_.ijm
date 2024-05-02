@@ -1,11 +1,11 @@
 //作業ディレクトリの選択
 showMessage("Select Open Folder");
-dir = getDirectory("Choose a Directory");
+dir = getDirectory("Choose Directory");
 list = getFileList(dir); //作業ディレクトリの中にあるファイルのリスト
 
 list_oib = Array.filter(list, ".oib");
 list_oir = Array.filter(list, ".oir");
-list = Array.concat(list_oib, list_oir); //.oirと.oibのみのリスト
+list_read = Array.concat(list_oib, list_oir); //.oirと.oibのみのリスト
 
 //データ保存用のディレクトリを作成
 savedir = dir + "stack\\"
@@ -39,7 +39,7 @@ if(stackmode != "All channels"){
 	Dialog.create("Choose single channel color mode");
 	items_singlecolormode = newArray("Gray", "Color");
 	Dialog.addRadioButtonGroup("Single channel color mode", items_singlecolormode, 2, 1, "Gray");
-	Dialog.addMessage("Enter the name of the channel to be \nused when storing the single-channel \nstacked image (if you want).")
+	Dialog.addMessage("Enter the name of the channel to be \nused when saving the single-channel \nstacked image (if you want).")
 	Dialog.addString("Channel 1", "channel-1");
 	Dialog.addString("Channel 2", "channel-2");
 	Dialog.addString("Channel 3", "channel-3");	
@@ -61,8 +61,8 @@ if(stackmode != "All channels"){
 }
 
 //main
-for(j=0; j<list.length; ++j){
-	name = list[j];
+for(j=0; j<list_read.length; ++j){
+	name = list_read[j];
 	extension = indexOf(name, "."); //拡張子(.を含む)
 	namewithoutextension = substring(name, 0, extension); //元データは"namewithoutextension + extension"
 	path = dir+name;
