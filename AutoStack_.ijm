@@ -1,3 +1,6 @@
+//Ver1.10---------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
 //作業ディレクトリの選択
 showMessage("Select Open Folder");
 dir = getDirectory("Choose Directory");
@@ -80,24 +83,32 @@ for(j=0; j<list_read.length; ++j){
 		
 		if(stackmode != "All channels"){
 			run(col_singlechannel[k]);
+			if(channels == 1){
+				run("RGB Color");
+			}
 			saveAs(saveextension, savedir + namewithoutextension + "_stack_" + channelname[k] + "." + saveextension);
 		}
 		
-		run(col[k]);
+		if(channels != 1){
+			run(col[k]);			
+		}
 	}
 	
 	if(stackmode != "Single channels"){
-		//Merge channels
-		Property.set("CompositeProjection", "Sum");
-		Stack.setDisplayMode("composite");
-		
+		if(channels != 1){
+			//Merge channels
+			Property.set("CompositeProjection", "Sum");
+			Stack.setDisplayMode("composite");
+		}		
 		//Save
 		saveAs(saveextension, savedir + namewithoutextension + "_stack." + saveextension);
 	}
 
 	//表示モードを元に戻す
-	Property.set("CompositeProjection", "null");
-	Stack.setDisplayMode("color");
+	if(channels != 1){
+		Property.set("CompositeProjection", "null");
+		Stack.setDisplayMode("color");
+	}
 		
 	close("MAX_"+name);
 	close();
