@@ -28,10 +28,12 @@ items_saveextension = newArray("png", "jpeg", "tiff");
 Dialog.addRadioButtonGroup("Stack mode", items_mode, 3, 1,"All channels");
 Dialog.addRadioButtonGroup("Color mode", items_color, 3, 1,"Green / Magenta / Cyan");
 Dialog.addRadioButtonGroup("Save file format", items_saveextension, 3, 1, "png");
+Dialog.addCheckbox("Scale bar", false);
 Dialog.show;
 stackmode = Dialog.getRadioButton();
 colormode = Dialog.getRadioButton();
 saveextension = Dialog.getRadioButton();
+isScalebar = Dialog.getCheckbox();
 
 if(colormode == "Green / Magenta / Cyan"){
 	col = col_magenta;
@@ -66,6 +68,39 @@ if(stackmode != "All channels"){
 	channelname = newArray(channel1, channel2, channel3);
 }
 
+if (isScalebar) {
+	items_locate = newArray("[Lower Right]", "[Lower Left]", "[Upper Right]", "[Upper Left]");
+
+	Dialog.create("Scalebar setting");
+	Dialog.addRadioButtonGroup("Bar location", items_locate, 4, 1,"[Lower Right]");
+	Dialog.addString("Length in micro meters", "50");
+	Dialog.addMessage("To hide scale bar length text, enable checkbox below.");
+	Dialog.addCheckbox("Hide Text", true);
+	Dialog.addMessage("Otherwise, set font config below.");
+	Dialog.addString("Font size", "12");
+	Dialog.addCheckbox("Bold font", true);
+	Dialog.addCheckbox("Serif Text", false);
+	Dialog.show;
+	strLocation = Dialog.getRadioButton();
+	strLength = Dialog.getString();
+	isHideText = Dialog.getCheckbox();
+	strFontsize = Dialog.getString();
+	isBoldfont = Dialog.getCheckbox();
+	isSeriffont = Dialog.getCheckbox();
+
+	strBarCommand = "width=" + strLength + " height=20 font=" + strFontsize + " location=" + strLocation + " horizontal";
+	if(isBoldfont){
+		strBarCommand += " bold";
+	}
+	if(isHideText){
+		strBarCommand += " hide";
+	}
+	if(isSeriffont){
+		strBarCommand += " serif";
+	}
+	strBarCommand += " overlay";
+}
+
 //main
 for(j=0; j<list_read.length; ++j){
 	name = list_read[j];
@@ -75,6 +110,9 @@ for(j=0; j<list_read.length; ++j){
 
 	run("Bio-Formats Importer", "open=path");
 	run("Z Project...", "projection=[Max Intensity]"); //Stack
+	if (isScalebar) {
+		run("Scale Bar...", strBarCommand);
+	}
 	close(name); //元ファイルを閉じる
 
 	Stack.getDimensions(width, height, channels, slices, frames); //チャンネル数を取得
